@@ -5,12 +5,56 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:  # Manual trigger when you need it
+  workflow_dispatch:  # Manual trigger with advanced options
+    inputs:
+      test_file:
+        description: 'Test file to run (or All Tests)'
+        required: false
+        type: choice
+        default: 'All Tests'
+        options:
+          - 'All Tests'
+          - 'SauceDemo.test.ts'
+          - 'TradeMe.test.ts'
+          - 'OrangeHrm.test.ts'
+      
+      browser:
+        description: 'Browser to test on'
+        required: true
+        type: choice
+        default: 'chromium'
+        options:
+          - 'chromium'
+          - 'firefox'
+          - 'webkit'
+          - 'all'
+      
+      workers:
+        description: 'Number of parallel workers'
+        required: false
+        type: choice
+        default: '1'
+        options:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+      
+      retries:
+        description: 'Number of retries on failure'
+        required: false
+        type: choice
+        default: '2'
+        options:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
 
 jobs:
   test:
-    name: Run All Tests
-    timeout-minutes: 30  # Shorter timeout for personal projects
+    name: Run Tests
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     
     steps:
@@ -27,10 +71,47 @@ jobs:
       run: npm ci
       
     - name: Install Playwright browsers
-      run: npx playwright install --with-deps chromium
+      run: |
+        if [ "${{ github.event.inputs.browser }}" == "all" ]; then
+          npx playwright install --with-deps
+        elif [ "${{ github.event.inputs.browser }}" == "webkit" ]; then
+          npx playwright install --with-deps webkit
+        elif [ "${{ github.event.inputs.browser }}" == "firefox" ]; then
+          npx playwright install --with-deps firefox
+        else
+          npx playwright install --with-deps chromium
+        fi
       
     - name: Run Playwright tests
-      run: npx playwright test --project=chromium
+      run: |
+        # Build test command based on inputs
+        TEST_CMD="npx playwright test"
+        
+        # Add specific test file if selected
+        if [ "${{ github.event.inputs.test_file }}" != "All Tests" ] && [ -n "${{ github.event.inputs.test_file }}" ]; then
+          TEST_CMD="$TEST_CMD ${{ github.event.inputs.test_file }}"
+        fi
+        
+        # Add browser project
+        if [ "${{ github.event.inputs.browser }}" != "all" ] && [ -n "${{ github.event.inputs.browser }}" ]; then
+          TEST_CMD="$TEST_CMD --project=${{ github.event.inputs.browser }}"
+        fi
+        
+        # Add workers (for manual runs only, auto-runs use default)
+        if [ -n "${{ github.event.inputs.workers }}" ]; then
+          TEST_CMD="$TEST_CMD --workers=${{ github.event.inputs.workers }}"
+        fi
+        
+        # Add retries (for manual runs only)
+        if [ -n "${{ github.event.inputs.retries }}" ]; then
+          TEST_CMD="$TEST_CMD --retries=${{ github.event.inputs.retries }}"
+        else
+          # Default for automated runs
+          TEST_CMD="$TEST_CMD --retries=2"
+        fi
+        
+        echo "Running: $TEST_CMD"
+        $TEST_CMD
       env:
         CI: true
         # URLs from GitHub Variables
@@ -49,8 +130,8 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: playwright-report
+        name: playwright-report-${{ github.event.inputs.browser || 'chromium' }}
         path: |
           playwright-report/
           test-results/
-        retention-days: 7  # Shorter retention for personal projects
+        retention-days: 7
