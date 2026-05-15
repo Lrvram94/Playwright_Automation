@@ -33,6 +33,17 @@ jobs:
       run: npx playwright test --project=chromium
       env:
         CI: true
+        # URLs from GitHub Variables
+        SAUCEDEMO_URL: ${{ vars.SAUCEDEMO_URL }}
+        TRADEME_URL: ${{ vars.TRADEME_URL }}
+        ORANGEHRM_URL: ${{ vars.ORANGEHRM_URL }}
+        # Credentials from GitHub Secrets
+        SAUCEDEMO_STANDARD_USERNAME: ${{ secrets.SAUCEDEMO_STANDARD_USERNAME }}
+        SAUCEDEMO_STANDARD_PASSWORD: ${{ secrets.SAUCEDEMO_STANDARD_PASSWORD }}
+        SAUCEDEMO_LOCKEDOUT_USERNAME: ${{ secrets.SAUCEDEMO_LOCKEDOUT_USERNAME }}
+        SAUCEDEMO_LOCKEDOUT_PASSWORD: ${{ secrets.SAUCEDEMO_LOCKEDOUT_PASSWORD }}
+        ORANGEHRM_ADMIN_USERNAME: ${{ secrets.ORANGEHRM_ADMIN_USERNAME }}
+        ORANGEHRM_ADMIN_PASSWORD: ${{ secrets.ORANGEHRM_ADMIN_PASSWORD }}
         
     - name: Upload test results
       if: always()

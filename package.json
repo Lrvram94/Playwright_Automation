@@ -24,6 +24,7 @@
   "devDependencies": {
     "@playwright/test": "^1.56.1",
     "@types/node": "^20.19.23",
+    "dotenv": "^17.4.2",
     "typescript": "^5.0.0"
   }
 }
