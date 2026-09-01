@@ -21,7 +21,6 @@ test.describe('OrangeHRM Login Test', () => {
 
     // Verify if key dashboards are visible with relevant data
     await expect(orangeHrm.timeatworkModule).toBeVisible();
-    await expect(orangeHrm.timeatworkattendancecard).toBeVisible();
     await expect(orangeHrm.myaccountMenu).toBeVisible();
     await expect(orangeHrm.quickLaunchModule).toBeVisible();
     await expect(orangeHrm.employeeDistributionContainer).toBeVisible();

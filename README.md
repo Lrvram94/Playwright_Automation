@@ -1,5 +1,7 @@
 # Playwright UI Automation Project
 
+[![Playwright Tests](https://github.com/Lrvram94/Playwright_Automation/actions/workflows/playwright-ci.yml/badge.svg)](https://github.com/Lrvram94/Playwright_Automation/actions/workflows/playwright-ci.yml)
+
 A TypeScript-based Playwright automation framework using the Page Object Model pattern with CI/CD integration.
 
 ## Project Structure

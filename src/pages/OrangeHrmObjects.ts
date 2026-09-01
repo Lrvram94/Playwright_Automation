@@ -13,7 +13,7 @@ export class OrangeHrmObjects extends BasePage {
   
   // Dashboard Page Locators
   get timeatworkModule(): Locator { return this.page.getByText('Time at Work', { exact: true }); }
-  get timeatworkattendancecard(): Locator { return this.page.locator('.orangehrm-attendance-card-bar'); } 
+  get timeatworkattendancecard(): Locator { return this.page.locator('.orangehrm-attendance-card'); } 
   get myaccountMenu(): Locator { return this.page.getByText('My Actions', { exact: true }); }
   get quickLaunchModule(): Locator { return this.page.getByText('Quick Launch', { exact: true }); }
   get pimMenu(): Locator { return this.page.getByText('PIM', { exact: true }); }
@@ -37,9 +37,9 @@ export class OrangeHrmObjects extends BasePage {
   // PIM Page Locators
   get employeeListMenu(): Locator { return this.page.getByText('Employee List', { exact: true }); }
   get addEmployeeButton(): Locator { return this.page.getByRole('button', { name: 'Add' }) }
-  get firstNameInput(): Locator { return this.page.getByRole('textbox', { name: 'First Name' }) }
-  get middleNameInput(): Locator { return this.page.getByRole('textbox', { name: 'Middle Name' }) }
-  get lastNameInput(): Locator { return this.page.getByRole('textbox', { name: 'Last Name' }) }
+  get firstNameInput(): Locator { return this.page.getByPlaceholder('First Name'); }
+  get middleNameInput(): Locator { return this.page.getByPlaceholder('Middle Name'); }
+  get lastNameInput(): Locator { return this.page.getByPlaceholder('Last Name'); }
   get employeeIdInput(): Locator { return this.page.locator('.oxd-input.oxd-input--active').nth(1) }
   get saveEmployeeButton(): Locator { return this.page.getByRole('button', { name: 'Save' })}
   get searchButton(): Locator { return this.page.getByRole('button', { name: 'Search' })}
